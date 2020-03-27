@@ -205,6 +205,22 @@ impl PrivateKey {
 
         k
     }
+    /// Returns the private exponent of the key.
+    pub fn d(&self) -> &BigUint {
+        &self.d
+    }
+
+    /// Returns the prime factors.
+    pub fn primes(&self) -> &[BigUint] {
+        &self.primes
+    }
+    
+    pub fn n(&self) -> &BigUint {
+        &self.n
+    }
+    pub fn e(&self) -> &BigUint {
+        &self.e
+    }
 }
 
 /// Check that the public key is well formed and has an exponent within acceptable bounds.
