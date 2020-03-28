@@ -6,6 +6,7 @@ extern crate num_iter;
 extern crate rand;
 extern crate subtle;
 extern crate zeroize;
+extern crate crypto;
 
 #[cfg(feature = "serde")]
 extern crate serde_crate;
