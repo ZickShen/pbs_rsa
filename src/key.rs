@@ -3,6 +3,7 @@ use num_bigint::traits::ModInverse;
 use num_bigint::{RandPrime, BigUint};
 use num_traits::{FromPrimitive, One, Zero};
 use rand::{rngs::ThreadRng, Rng};
+use crypto::sha2::Sha256;
 use crate::errors::{Error, Result};
 #[cfg(feature = "serde")]
 use serde_crate::{Deserialize, Serialize};
@@ -90,9 +91,7 @@ impl PublicKey {
         message: String,
         sig: &Signature
     ) -> Result<()> {
-            if 1 == 1 {
-                return Err(Error::InputNotHashed);
-            }
+            let mut hasher = Sha256::new();
             Ok(())
     }
     pub fn n(&self) -> &BigUint {
@@ -197,14 +196,12 @@ impl PrivateKey {
         d: BigUint,
         primes: Vec<BigUint>,
     ) -> PrivateKey {
-        let mut k = PrivateKey {
+        PrivateKey {
             n,
             e,
             d,
             primes,
-        };
-
-        k
+        }
     }
     /// Returns the private exponent of the key.
     pub fn d(&self) -> &BigUint {
