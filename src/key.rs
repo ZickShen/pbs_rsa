@@ -2,7 +2,7 @@
 use num_bigint_dig::traits::ModInverse;
 use num_bigint::{RandPrime, BigUint};
 use num_traits::{Num, FromPrimitive, One, Zero};
-use rand::{rngs::ThreadRng, Rng};
+use rand::{Rng};
 use crypto::sha2::Sha256;
 use crypto::digest::Digest;
 use crate::errors::{Error, Result};
