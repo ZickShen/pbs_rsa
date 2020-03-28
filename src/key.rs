@@ -1,9 +1,10 @@
 
 use num_bigint::traits::ModInverse;
 use num_bigint::{RandPrime, BigUint};
-use num_traits::{FromPrimitive, One, Zero};
+use num_traits::{Num, FromPrimitive, One, Zero};
 use rand::{rngs::ThreadRng, Rng};
 use crypto::sha2::Sha256;
+use crypto::digest::Digest;
 use crate::errors::{Error, Result};
 #[cfg(feature = "serde")]
 use serde_crate::{Deserialize, Serialize};
@@ -91,8 +92,25 @@ impl PublicKey {
         message: String,
         sig: &Signature
     ) -> Result<()> {
-            let mut hasher = Sha256::new();
-            Ok(())
+        let mut hasher = Sha256::new();
+        hasher.input_str(&message);
+        let m = hasher.result_str();
+        let m = BigUint::from_str_radix(&m, 16).unwrap();
+        hasher.reset();
+        hasher.input_str(&sig.a);
+        let a = hasher.result_str();
+        let a = BigUint::from_str_radix(&a, 16).unwrap();
+
+        let left = sig.s.modpow(self.e(), self.n());
+        let mid_val = sig.c.modpow(&BigUint::from_u64(2).unwrap(), self.n()) + BigUint::one();
+        let mid_val = mid_val.modpow(&BigUint::from_u64(2).unwrap(), self.n());
+        let mut right = a * m.modpow(&BigUint::from_u64(2).unwrap(), self.n()) * mid_val;
+        right %= self.n();
+
+        if left != right {
+            return Err(Error::Verification);
+        }
+        Ok(())
     }
     pub fn n(&self) -> &BigUint {
         &self.n
