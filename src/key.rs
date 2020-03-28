@@ -1,8 +1,7 @@
 
 use num_bigint::traits::ModInverse;
-use num_bigint::Sign::Plus;
-use num_bigint::{BigInt, BigUint};
-use num_traits::{FromPrimitive, One};
+use num_bigint::{RandPrime, BigUint};
+use num_traits::{FromPrimitive, One, Zero};
 use rand::{rngs::ThreadRng, Rng};
 use crate::errors::{Error, Result};
 #[cfg(feature = "serde")]
@@ -13,6 +12,9 @@ lazy_static! {
     static ref MIN_PUB_EXPONENT: BigUint = BigUint::from_u64(2).unwrap();
     static ref MAX_PUB_EXPONENT: BigUint = BigUint::from_u64(1 << (31 - 1)).unwrap();
 }
+
+/// Default exponent for RSA keys.
+const EXP: u64 = 65537;
 
 /// Represents the public part of an RSA key.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -84,11 +86,10 @@ impl PublicKey {
         Ok(k)
     }
     pub fn verify(
-        &self, 
-        s: BigUint, 
-        c: BigUint,
-        common_message: String,
-        message: String) -> Result<()> {
+        &self,
+        message: String,
+        sig: &Signature
+    ) -> Result<()> {
             if 1 == 1 {
                 return Err(Error::InputNotHashed);
             }
@@ -107,7 +108,7 @@ impl PrivateKey {
         rng: &mut R,
         bit_size: usize
     ) -> Result<PrivateKey>{
-        let nprimes = 2
+        let nprimes = 2;
         if bit_size < 64 {
             let prime_limit = (1u64 << (bit_size / nprimes) as u64) as f64;
     
@@ -195,8 +196,8 @@ impl PrivateKey {
         e: BigUint,
         d: BigUint,
         primes: Vec<BigUint>,
-    ) -> RSAPrivateKey {
-        let mut k = RSAPrivateKey {
+    ) -> PrivateKey {
+        let mut k = PrivateKey {
             n,
             e,
             d,
@@ -220,6 +221,16 @@ impl PrivateKey {
     }
     pub fn e(&self) -> &BigUint {
         &self.e
+    }
+
+    pub fn sign(
+        &self,
+        a: String,
+        alpha: BigUint,
+        beta: BigUint,
+        x: BigUint
+    ) -> (BigUint, BigUint) {
+        (BigUint::zero(), BigUint::zero())
     }
 }
 

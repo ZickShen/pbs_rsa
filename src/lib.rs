@@ -17,6 +17,10 @@ extern crate serde_test;
 
 pub mod errors;
 
+mod key;
+
+pub use self::key::{PublicKey, PrivateKey};
+
 #[cfg(test)]
 mod tests {
     #[test]
