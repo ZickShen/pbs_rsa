@@ -231,13 +231,6 @@ impl PrivateKey {
         &self.primes
     }
     
-    pub fn n(&self) -> &BigUint {
-        &self.n
-    }
-    pub fn e(&self) -> &BigUint {
-        &self.e
-    }
-
     pub fn sign(
         &self,
         a: String,
@@ -245,34 +238,41 @@ impl PrivateKey {
         beta: BigUint,
         x: BigUint
     ) -> (BigUint, BigUint) {
-        let beta_invert = beta.mod_inverse(self.n()).unwrap();
+        let beta_invert = beta.mod_inverse(&self.n).unwrap();
         let beta_invert = beta_invert.to_biguint().unwrap();
         let mut hasher = Sha256::new();
         hasher.input_str(&a);
         let a = hasher.result_str();
         let a = BigUint::from_str_radix(&a, 16).unwrap();
 
-        let mut mid_val = x.modpow(&BigUint::from_u64(2).unwrap(), self.n()) + BigUint::one();
-        mid_val *= beta_invert.modpow(&BigUint::from_u64(2).unwrap(), self.n());
+        let mut mid_val = x.modpow(&BigUint::from_u64(2).unwrap(), &self.n) + BigUint::one();
+        mid_val *= beta_invert.modpow(&BigUint::from_u64(2).unwrap(), &self.n);
         mid_val *= alpha;
-        mid_val = mid_val.modpow(&BigUint::from_u64(2).unwrap(), self.n());
+        mid_val = mid_val.modpow(&BigUint::from_u64(2).unwrap(), &self.n);
         mid_val *= a;
 
         let d_1 = self.d() - BigUint::one();
         
-        let t = mid_val.modpow(&d_1, self.n());
+        let t = mid_val.modpow(&d_1, &self.n);
         (beta_invert, t)
     }
 }
 
 impl From<PrivateKey> for PublicKey {
-    fn from(key: PrivateKey) -> Self {
-        PublicKey {
-            n: key.n().clone(),
-            e: key.e().clone(),
-        }
+    fn from(private_key: PrivateKey) -> Self {
+        (&private_key).into()
     }
 }
+
+impl From<&PrivateKey> for PublicKey {
+    fn from(private_key: &PrivateKey) -> Self {
+        let n = private_key.n.clone();
+        let e = private_key.e.clone();
+
+        PublicKey { n, e }
+    }
+}
+
 
 /// Check that the public key is well formed and has an exponent within acceptable bounds.
 #[inline]
