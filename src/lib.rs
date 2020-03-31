@@ -14,4 +14,4 @@ pub mod errors;
 
 mod key;
 
-pub use self::key::{PublicKey, PrivateKey};
+pub use self::key::{PublicKey, PrivateKey, Signature};
