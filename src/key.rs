@@ -39,9 +39,9 @@ pub struct PublicKey {
 )]
 pub struct PrivateKey {
     /// Modulus
-    pub n: BigUint,
+    n: BigUint,
     /// Public exponent
-    pub e: BigUint,
+    e: BigUint,
     /// Private exponent
     d: BigUint,
     /// Prime factors of N, contains 2 elements.
