@@ -15,11 +15,3 @@ pub mod errors;
 mod key;
 
 pub use self::key::{PublicKey, PrivateKey};
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
