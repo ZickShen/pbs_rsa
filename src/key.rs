@@ -220,6 +220,12 @@ impl PrivateKey {
             d,
             primes,
         }
+    }    
+    pub fn n(&self) -> &BigUint {
+        &self.n
+    }
+    pub fn e(&self) -> &BigUint {
+        &self.e
     }
     /// Returns the private exponent of the key.
     pub fn d(&self) -> &BigUint {
@@ -238,22 +244,22 @@ impl PrivateKey {
         beta: BigUint,
         x: BigUint
     ) -> (BigUint, BigUint) {
-        let beta_invert = beta.mod_inverse(&self.n).unwrap();
+        let beta_invert = beta.mod_inverse(self.n()).unwrap();
         let beta_invert = beta_invert.to_biguint().unwrap();
         let mut hasher = Sha256::new();
         hasher.input_str(&a);
         let a = hasher.result_str();
         let a = BigUint::from_str_radix(&a, 16).unwrap();
 
-        let mut mid_val = x.modpow(&BigUint::from_u64(2).unwrap(), &self.n) + BigUint::one();
-        mid_val *= beta_invert.modpow(&BigUint::from_u64(2).unwrap(), &self.n);
+        let mut mid_val = x.modpow(&BigUint::from_u64(2).unwrap(), self.n()) + BigUint::one();
+        mid_val *= beta_invert.modpow(&BigUint::from_u64(2).unwrap(), self.n());
         mid_val *= alpha;
-        mid_val = mid_val.modpow(&BigUint::from_u64(2).unwrap(), &self.n);
+        mid_val = mid_val.modpow(&BigUint::from_u64(2).unwrap(), self.n());
         mid_val *= a;
 
         let d_1 = self.d() - BigUint::one();
         
-        let t = mid_val.modpow(&d_1, &self.n);
+        let t = mid_val.modpow(&d_1, self.n());
         (beta_invert, t)
     }
 }
