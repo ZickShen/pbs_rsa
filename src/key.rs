@@ -50,9 +50,9 @@ pub struct PrivateKey {
 
 pub struct Signature {
     /// common massage
-    a: String,
-    c: BigUint,
-    s: BigUint
+    pub a: String,
+    pub c: BigUint,
+    pub s: BigUint
 }
 
 impl PartialEq for PrivateKey {
