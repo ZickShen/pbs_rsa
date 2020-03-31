@@ -265,6 +265,15 @@ impl PrivateKey {
     }
 }
 
+impl From<PrivateKey> for PublicKey {
+    fn from(key: PrivateKey) -> Self {
+        PublicKey {
+            n: key.n().clone(),
+            e: key.e().clone(),
+        }
+    }
+}
+
 /// Check that the public key is well formed and has an exponent within acceptable bounds.
 #[inline]
 pub fn check_public(public_key: &PublicKey) -> Result<()> {
