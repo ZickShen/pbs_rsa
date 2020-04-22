@@ -38,3 +38,9 @@ hex = "0.4.0"
 serde_test = "1.0.89"
 rand_xorshift = "0.2.0"
 pem = "0.7"
+bencher = "0.1.5"
+
+[[bench]]
+name = "sign"
+bench = true
+harness = false
