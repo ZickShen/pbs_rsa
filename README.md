@@ -8,14 +8,14 @@ A partially blind signature implementation based on RSA in pure Rust, which is a
 
 `Cargo.toml`:
 
-```
+``` toml
 [dependencies]
 pbs_rsa = { git = "https://github.com/ZickShen/pbs_rsa" }
 ```
 
 `main.rs`:
 
-```
+``` rust
 
 extern crate rand;
 extern crate pbs_rsa;
@@ -57,7 +57,7 @@ fn main(){
 
 Run tests with:
 
-```
+``` bash
 $ cargo test
 ```
 
@@ -66,7 +66,7 @@ $ cargo test
 Benchmarking functionality is kept in the [`benches` directory](benches). You
 can run the benchmarks with the following command:
 
-```
+``` bash
 $ RUSTFLAGS="-C target_cpu=native" cargo bench
 ```
 
